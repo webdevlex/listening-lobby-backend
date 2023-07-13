@@ -7,7 +7,9 @@ const reciever = require("./sockets/reciever");
 require("dotenv").config();
 // const path = require("path");
 const frontEndUrl =
-	process.env.NODE_ENV === "production" ? "" : "http://localhost:3000";
+	process.env.NODE_ENV === "production"
+		? "https://listening-lobby.onrender.com"
+		: "http://localhost:3000";
 
 const app = express();
 

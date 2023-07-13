@@ -1,5 +1,5 @@
-const axios = require('axios');
-const lobby = require('./lobby');
+const axios = require("axios");
+const lobby = require("./lobby");
 
 const UNAUTHORIZED_ERROR_CODE = 401;
 
@@ -7,9 +7,9 @@ const UNAUTHORIZED_ERROR_CODE = 401;
 function defaultHeader(token) {
 	return {
 		headers: {
-			Accept: 'application/json',
-			'content-type': 'application/json',
-			Authorization: 'Bearer ' + token,
+			Accept: "application/json",
+			"content-type": "application/json",
+			Authorization: "Bearer " + token,
 		},
 	};
 }
@@ -17,12 +17,12 @@ function defaultHeader(token) {
 // Perfoms a basic track and album search on spotify
 async function search(params) {
 	const { searchValue, token, searchAmount } = params;
-	const endPoint = 'https://api.spotify.com/v1/search';
+	const endPoint = "https://api.spotify.com/v1/search";
 	const config = {
 		headers: defaultHeader(token).headers,
 		params: {
 			q: searchValue,
-			type: 'album,track',
+			type: "album,track",
 			limit: searchAmount,
 		},
 	};
@@ -48,7 +48,7 @@ async function getAndFormatSongData(
 	// Raw results directly from song and artist search by query
 	const searchValue = `${trackName} ${artists}`;
 	const rawResults = await searchForTrack({ searchValue, token, user });
-	if (!rawResults) return '-1';
+	if (!rawResults) return "-1";
 
 	// Attempt to find a song match by isrc
 	songMatchTesting(rawResults, trackName, artists, uniId, duration);
@@ -61,21 +61,21 @@ async function getAndFormatSongData(
 	);
 	// If found return the songs id
 	if (!songMatch) {
-		console.log('No song match');
+		console.log("No song match");
 	}
-	songMatch = songMatch ? songMatch : { uri: '-1' };
+	songMatch = songMatch ? songMatch : { uri: "-1" };
 	return songMatch.uri;
 }
 
 // Perfoms a track search on spotify by query
 async function searchForTrack(params) {
 	const { searchValue, token } = params;
-	const endPoint = 'https://api.spotify.com/v1/search';
+	const endPoint = "https://api.spotify.com/v1/search";
 	const config = {
 		headers: defaultHeader(token).headers,
 		params: {
 			q: searchValue,
-			type: 'track',
+			type: "track",
 			limit: 20,
 		},
 	};
@@ -122,22 +122,22 @@ async function getAlbumId(
 				album.release_date === releaseDate)
 	);
 	if (albumMatch) {
-		console.log('Match Album!');
+		console.log("Match Album!");
 		return albumMatch.id;
 	}
-	console.log('album match not found');
+	console.log("album match not found");
 	return albumMatch;
 }
 
 // Perfoms an album search on spotify by query
 async function searchForAlbum(params) {
 	const { searchValue, token } = params;
-	const endPoint = '	https://api.spotify.com/v1/search';
+	const endPoint = "	https://api.spotify.com/v1/search";
 	const config = {
 		headers: defaultHeader(token).headers,
 		params: {
 			q: searchValue,
-			type: 'album',
+			type: "album",
 			limit: 20,
 		},
 	};
@@ -162,14 +162,14 @@ function songMatchTesting(rawResults, trackName, artists, uniId, duration) {
 	console.log(trackName, artists);
 	rawResults.tracks.items.every((song) => {
 		console.log(
-			'Test 1: ',
+			"Test 1: ",
 
 			song.external_ids.isrc === uniId,
 			song.external_ids.isrc,
 			uniId
 		);
 		console.log(
-			'Test 2: ',
+			"Test 2: ",
 			song.duration_ms + 500 >= duration && song.duration_ms - 500 <= duration,
 			duration,
 			song.duration_ms
@@ -180,7 +180,7 @@ function songMatchTesting(rawResults, trackName, artists, uniId, duration) {
 				song.duration_ms + 500 >= duration &&
 				song.duration_ms - 500 <= duration)
 		) {
-			console.log('Match!');
+			console.log("Match!");
 			return false;
 		}
 		return true;
@@ -196,21 +196,21 @@ function albumMatchTesting(
 ) {
 	rawResults.albums.items.every((album) => {
 		console.log(
-			'Test 1: ',
+			"Test 1: ",
 			songCount === album.total_tracks,
 			songCount,
 			album.total_tracks
 		);
-		console.log('-------------------------');
+		console.log("-------------------------");
 		console.log(
-			'Test 2: ',
+			"Test 2: ",
 			uniAlbumNameFormatter(album.name, true) ===
 				uniAlbumNameFormatter(albumName, true),
 			uniAlbumNameFormatter(album.name, true),
 			uniAlbumNameFormatter(albumName, true)
 		);
 		console.log(
-			'Release Date: ',
+			"Release Date: ",
 			album.release_date === releaseDate,
 			album.release_date,
 			releaseDate
@@ -243,7 +243,7 @@ async function formatAlbumData(albumData, token, formatDuration, user) {
 		// Data ui needs
 		dataForUi.push({
 			trackName: track.name,
-			artists: track.artists.map(({ name }) => name).join(', '),
+			artists: track.artists.map(({ name }) => name).join(", "),
 			trackCover: albumData.albumCover,
 			id: track.id,
 			addedBy: username,
@@ -274,9 +274,9 @@ async function getAlbumById(params) {
 async function getTempToken() {
 	try {
 		const url =
-			process.env.NODE_ENV === 'production'
-				? 'www.listeninglobby.com/spotify/temp_token'
-				: 'http://localhost:8888/spotify/temp_token';
+			process.env.NODE_ENV === "production"
+				? "https://listening-lobby-backend.onrender.com/spotify/temp_token"
+				: "http://localhost:8888/spotify/temp_token";
 		const res = await axios.get(url);
 		return res.data;
 	} catch (err) {}
@@ -314,7 +314,7 @@ async function getAlbumSongsUriByAlbumId(albumId, token, dataForApple) {
 }
 
 async function likeSong({ spotifySong, user }) {
-	const songId = spotifySong.replace('spotify:track:', '');
+	const songId = spotifySong.replace("spotify:track:", "");
 	const endPoint = `https://api.spotify.com/v1/me/tracks?ids=${songId}`;
 
 	try {
@@ -332,14 +332,14 @@ async function getNewToken(refreshToken) {
 	};
 
 	try {
-		const res = await axios.get('/spotify/refresh_token', config);
+		const res = await axios.get("/spotify/refresh_token", config);
 		return res.data;
 	} catch (err) {}
 }
 
 // Token Error Handlers
 async function handleRefreshToken(params, func) {
-	console.log('------------------ REFRESH TOKEN RAN -----------------------');
+	console.log("------------------ REFRESH TOKEN RAN -----------------------");
 	// Get new token
 	const newToken = await getNewToken(params.refreshToken);
 	params.token = newToken;
@@ -351,7 +351,7 @@ async function handleRefreshToken(params, func) {
 }
 
 async function handleTempToken(params, func) {
-	console.log('------------------ TEMP TOKEN RAN -----------------------');
+	console.log("------------------ TEMP TOKEN RAN -----------------------");
 	// Get new token
 	const newToken = await getTempToken();
 	params.token = newToken;

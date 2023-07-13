@@ -1,4 +1,4 @@
-const axios = require('axios');
+const axios = require("axios");
 
 let defaultSearchResults = {
 	songs: {
@@ -14,7 +14,7 @@ async function search(searchName, token, searchAmount = 10) {
 	const endPoint = `https://api.music.apple.com/v1/catalog/us/search?term=${searchName}&limit=${LIMIT}&types=songs,albums`;
 	const config = {
 		headers: {
-			Authorization: 'Bearer ' + token,
+			Authorization: "Bearer " + token,
 		},
 	};
 
@@ -37,14 +37,14 @@ function songMatchTesting(rawResults, trackName, artists, uniId, duration) {
 	console.log(trackName, artists);
 	rawResults.songs.data.every((song) => {
 		console.log(
-			'Test 1: ',
+			"Test 1: ",
 
 			song.attributes.isrc === uniId,
 			song.attributes.isrc,
 			uniId
 		);
 		console.log(
-			'Test 2: ',
+			"Test 2: ",
 			song.attributes.durationInMillis + 500 >= duration &&
 				song.attributes.durationInMillis - 500 <= duration,
 			duration,
@@ -56,7 +56,7 @@ function songMatchTesting(rawResults, trackName, artists, uniId, duration) {
 				song.attributes.durationInMillis + 500 >= duration &&
 				song.attributes.durationInMillis - 500 <= duration)
 		) {
-			console.log('Match!');
+			console.log("Match!");
 			return false;
 		}
 		return true;
@@ -68,7 +68,7 @@ async function getAndFormatSongData(
 	token
 ) {
 	const searchResult = await search(`${trackName} ${artists}`, token, 10);
-	if (!searchResult) return '-1';
+	if (!searchResult) return "-1";
 
 	songMatchTesting(searchResult, trackName, artists, uniId, duration);
 	let songMatch = searchResult.songs.data.find(
@@ -79,9 +79,9 @@ async function getAndFormatSongData(
 				song.attributes.durationInMillis - 500 <= duration)
 	);
 	if (!songMatch) {
-		console.log('No song match');
+		console.log("No song match");
 	}
-	songMatch = songMatch ? songMatch : { id: '-1' };
+	songMatch = songMatch ? songMatch : { id: "-1" };
 	return songMatch.id;
 }
 function albumMatchTesting(
@@ -93,21 +93,21 @@ function albumMatchTesting(
 ) {
 	rawResults.every(({ attributes }) => {
 		console.log(
-			'Test 1: ',
+			"Test 1: ",
 			songCount === attributes.trackCount,
 			songCount,
 			attributes.trackCount
 		);
-		console.log('-------------------------');
+		console.log("-------------------------");
 		console.log(
-			'Test 2: ',
+			"Test 2: ",
 			uniAlbumNameFormatter(attributes.name, true) ===
 				uniAlbumNameFormatter(albumName, true),
 			uniAlbumNameFormatter(attributes.name, true),
 			uniAlbumNameFormatter(albumName, true)
 		);
 		console.log(
-			'Release Date: ',
+			"Release Date: ",
 			attributes.releaseDate === releaseDate,
 			attributes.releaseDate,
 			releaseDate
@@ -127,7 +127,7 @@ async function removeMusicVideosFromCount(album, token, spotifySongCount) {
 	let allAlbumTracks = await getAlbumSongsData(album.id, token);
 	let newSongData = [];
 	allAlbumTracks.forEach((track) => {
-		if (track.type === 'songs') {
+		if (track.type === "songs") {
 			newSongData.push(track);
 		}
 	});
@@ -181,10 +181,10 @@ async function getAlbumId(
 		if (albumMatch[albumMatch.length - 1] === 1) {
 			return albumMatch;
 		}
-		console.log('Match!');
+		console.log("Match!");
 		return albumMatch.id;
 	} else {
-		console.log('No Match');
+		console.log("No Match");
 		return albumMatch;
 	}
 }
@@ -193,7 +193,7 @@ async function appleAlbumSearch(searchValue, token) {
 	const endPoint = `https://api.music.apple.com/v1/catalog/us/search?term=${searchValue}&limit=10&types=albums`;
 	const config = {
 		headers: {
-			Authorization: 'Bearer ' + token,
+			Authorization: "Bearer " + token,
 		},
 	};
 
@@ -247,7 +247,7 @@ async function getAlbumSongsData(id, token) {
 	const endPoint = `https://api.music.apple.com/v1/catalog/us/albums/${id}/tracks`;
 	const config = {
 		headers: {
-			Authorization: 'Bearer ' + token,
+			Authorization: "Bearer " + token,
 		},
 	};
 	try {
@@ -274,7 +274,7 @@ async function formatAlbumData(
 	let dataForUi = [];
 
 	allAlbumSongData.forEach((track) => {
-		if (track.type === 'songs') {
+		if (track.type === "songs") {
 			dataForApplePlayer.push(track.id);
 			dataForUi.push({
 				trackName: track.attributes.name,
@@ -296,9 +296,9 @@ async function formatAlbumData(
 async function getTempToken() {
 	try {
 		const endPoint =
-			process.env.NODE_ENV === 'production'
-				? 'www.listeninglobby.com/apple/token'
-				: 'http://localhost:8888/apple/token';
+			process.env.NODE_ENV === "production"
+				? "https://listening-lobby-backend.onrender.com/apple/token"
+				: "http://localhost:8888/apple/token";
 		const res = await axios.get(endPoint);
 
 		return res.data.token;

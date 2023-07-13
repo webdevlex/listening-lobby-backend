@@ -7,7 +7,9 @@ const client_id = process.env.client_id;
 const client_secret = process.env.client_secret;
 
 const frontEndUrl =
-	process.env.NODE_ENV === "production" ? "" : "http://localhost:3000";
+	process.env.NODE_ENV === "production"
+		? "https://listening-lobby.onrender.com"
+		: "http://localhost:3000";
 
 const redirect_url =
 	process.env.NODE_ENV === "production"
