@@ -8,7 +8,7 @@ const client_secret = process.env.client_secret;
 
 const frontEndUrl =
 	process.env.NODE_ENV === "production"
-		? "https://listening-lobby.onrender.com"
+		? "https://listeninglobby.com"
 		: "http://localhost:3000";
 
 const redirect_url =
@@ -19,11 +19,11 @@ const redirect_uri = `${redirect_url}/spotify/callback`;
 
 const auth_error_url =
 	process.env.NODE_ENV === "production"
-		? "https://listening-lobby.onrender.com"
+		? "https://listeninglobby.com"
 		: "http://localhost:3000";
 
 const spotify_scope =
-	"user-read-private user-read-email streaming user-read-playback-state user-read-currently-playing playlist-modify-public playlist-modify-private user-library-modify";
+	"streaming user-read-playback-state user-read-currently-playing playlist-modify-public playlist-modify-private user-library-modify";
 
 var generateRandomString = function (length) {
 	var text = "";
