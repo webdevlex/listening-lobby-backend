@@ -13,13 +13,13 @@ const frontEndUrl =
 
 const redirect_url =
 	process.env.NODE_ENV === "production"
-		? "http://www.listeninglobby.com"
+		? "https://listening-lobby-backend.onrender.com"
 		: "http://localhost:8888";
 const redirect_uri = `${redirect_url}/spotify/callback`;
 
 const auth_error_url =
 	process.env.NODE_ENV === "production"
-		? "www.listeninglobby.com"
+		? "https://listening-lobby.onrender.com"
 		: "http://localhost:3000";
 
 const spotify_scope =
