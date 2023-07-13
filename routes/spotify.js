@@ -80,11 +80,10 @@ router.get("/callback", async function (req, res) {
 
 		try {
 			const response = await axios.post(endPoint, body, config);
-			console.log(frontEndUrl);
-			const url =
-				process.env.NODE_ENV === "production"
-					? "http://www.listeninglobby.com/lobby"
-					: "http://localhost:3000/lobby";
+			const url = frontEndUrl + "/lobby";
+			// process.env.NODE_ENV === "production"
+			// 	? "http://www.listeninglobby.com/lobby"
+			// 	: "http://localhost:3000/lobby";
 			const urlObj = new URL(url);
 			urlObj.search = new URLSearchParams({
 				token: response.data.access_token,
